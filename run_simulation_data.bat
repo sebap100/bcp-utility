@@ -1,0 +1,1 @@
+python bcp_util.py -c .\config\csd_simulation_data.properties
