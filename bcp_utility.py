@@ -23,28 +23,28 @@ def read_from_input_or_default(msg, default):
   else:
       return formatted_input
 
-# Return a generated file name for the output file
-# The output file will be located in a directory 
-# called '_out' under the currend working directory
-def init_output_file():
+# Return a generated file name for the output logs file
+# The output logs file will be located in a directory 
+# called '/logs' under the given baseDir directory
+def init_output_logs_file(baseDir):
     output_file_name = datetime.now().strftime("%Y_%m_%d__%H_%M_%S_%f") + ".txt"
-    out_dir = os.path.join(os.getcwd(), '_out')
-    output_file_path = os.path.join(out_dir, output_file_name)
+    out_dir = os.path.join(baseDir, 'logs')
+    output_logs_file_path = os.path.join(out_dir, output_file_name)
 
     if not os.path.exists(out_dir):
         try:
             os.makedirs(out_dir)
         except:
-            print('Unable to create _out dir')
+            print('Unable to create [' + baseDir + '/logs] dir')
 
-    return output_file_path
+    return output_logs_file_path
 
 
 # Create a temporary directory in the current working directory
 # and return the absolute path of this directory
 def create_temp_dir():
     dir_name = str(uuid.uuid4())
-    dir_path = os.path.join(os.getcwd(), dir_name)
+    dir_path = os.path.join(os.getcwd(), 'out', dir_name)
 
     try:
         os.makedirs(dir_path)
@@ -202,10 +202,10 @@ def main():
             exit()
 
     start_time = datetime.now()
-    output_file_path = init_output_file()
     temporary_dir_path = create_temp_dir()
+    output_logs_file_path = init_output_logs_file(temporary_dir_path)
 
-    with open(output_file_path, "w") as f:
+    with open(output_logs_file_path, "w") as f:
         for table_name in tables:
             try:
                 print('Copying data from table [' + table_name + '] ...')
@@ -236,8 +236,8 @@ def main():
                     os.remove(table_data_file)
 
     # Delete temporary directory
-    if os.path.isdir(temporary_dir_path):
-        os.rmdir(temporary_dir_path)
+    #if os.path.isdir(temporary_dir_path):
+    #    os.rmdir(temporary_dir_path)
     
     # Affichage du temps d'exécution
     end_time = datetime.now()
